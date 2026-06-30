@@ -1,0 +1,67 @@
+[gd_scene format=3 uid="uid://chpp4ltm58npk"]
+
+[sub_resource type="AudioStreamCsound" id="AudioStreamCsound_8c5ym"]
+csd_path = "res://piece.csd"
+message_level = 0
+
+[sub_resource type="GDScript" id="GDScript_8c5ym"]
+script/source = "extends AudioStreamPlayer
+
+func _on_play_button_pressed() -> void:
+	play()
+
+func _on_stop_button_pressed() -> void:
+	stop()
+
+func _on_randomize_button_pressed() -> void:
+	print(get(&\"parameters/random_out\")) # Can only return previously written values.
+
+	# Setting properties works.
+	var rand := randf()
+	if rand < .333:
+		rand = randf()
+		print_debug(\"Setting parameter/gain to %f\" % rand)
+		set(&\"parameters/gain\", rand)
+	elif rand < .666:
+		rand = 25. + randf() * 415.
+		print_debug(\"Setting parameter/frequency to %f\" % rand)
+		set(&\"parameters/frequency\", rand)
+	else:
+		rand = .125 + randf() * .375
+		print_debug(\"Setting parameter/pulse_width to %f\" % rand)
+		set(&\"parameters/pulse_width\", rand)
+"
+
+[node name="Buttons" type="Control" unique_id=887721686]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1695978205]
+layout_mode = 0
+offset_right = 148.0
+offset_bottom = 101.0
+
+[node name="PlayButton" type="Button" parent="VBoxContainer" unique_id=1692239388]
+layout_mode = 2
+text = "Play Button (Warning: Full Scale!)"
+
+[node name="StopButton" type="Button" parent="VBoxContainer" unique_id=1539937964]
+layout_mode = 2
+text = "Stop Button"
+
+[node name="RandomizeButton" type="Button" parent="VBoxContainer" unique_id=992110875]
+layout_mode = 2
+text = "RandomizeButton
+"
+
+[node name="AudioStreamPlayer" type="AudioStreamPlayer" parent="." unique_id=1815671558]
+stream = SubResource("AudioStreamCsound_8c5ym")
+script = SubResource("GDScript_8c5ym")
+
+[connection signal="pressed" from="VBoxContainer/PlayButton" to="AudioStreamPlayer" method="_on_play_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/StopButton" to="AudioStreamPlayer" method="_on_stop_button_pressed"]
+[connection signal="pressed" from="VBoxContainer/RandomizeButton" to="AudioStreamPlayer" method="_on_randomize_button_pressed"]
