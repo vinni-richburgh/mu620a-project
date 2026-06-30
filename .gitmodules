@@ -1,3 +1,6 @@
 [submodule "gdextension/godot-cpp"]
 	path = gdextension/godot-cpp
 	url = https://github.com/godotengine/godot-cpp.git
+[submodule "gdextension/audio-stream-csound"]
+	path = gdextension/audio-stream-csound
+	url = https://codeberg.org/vinni-richburgh/audio-stream-csound.git
