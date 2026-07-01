@@ -1,0 +1,79 @@
+\documentclass[12pt,a4paper]{article}
+
+
+
+\usepackage{gensymb}
+\usepackage{graphicx}
+\usepackage{biblatex}
+
+\usepackage{amsmath}
+\usepackage{amsfonts}
+
+\usepackage{amssymb} % for \smallsetminus
+
+\usepackage[
+	left=3.25cm,	% 3.0 - 3.5
+	right=2.5cm,	% 2.0 - 2.5
+	top=2.5cm,		% 2.0 - 2.5
+	bottom=2.5cm	% 2.0 - 2.5
+]{geometry}
+
+
+\begin{document}
+
+
+\begin{center}
+
+\vspace*{3.0cm}
+
+\Huge
+\textbf{AudioStreamCsound}
+
+\vspace{0.5cm}
+\LARGE
+The Final Project in MU620A
+
+\vspace{1.5cm}
+
+\textbf{Vincent Reichenberger}
+
+\vspace{6.5cm}
+
+\includegraphics[width=8cm]{fig/logo_old_2.png}
+
+\vfill
+
+\end{center}
+
+\renewcommand{\thefootnote}{(\roman{footnote})}
+
+\newpage
+
+\textit{AudioStreamCsound} is a plugin for the \textit{Godot} game engine using its \mbox{\textit{GDExtension}} API.
+The library enables the playback of \textit{Csound} pieces in realtime through generic \mbox{\textit{AudioStreamPlayer}} objects.
+Instructions on how to build and run the example can be found in the README.md file.
+
+Godot's various \textit{AudioStream} classes are just factories for \textit{AudioStreamPlayback} objects.
+An AudioStreamPlayer sitting in the scene tree references a disembodied \mbox{AudioStream} object and requests a playback to be instantiated when the player's \textit{play()} method is called.
+Each \mbox{AudioStreamCsound} instance stores a Csound object in memory and upon playback-instantiation passes this Csound object to the created playback.
+It is the job of the playback class to stream audio from the current Csound output working buffer to a Godot buffer in \mbox{AudioStreamPlaybackCsound}'s \textit{\_mix\_resampled()} method.
+
+By providing the classes \mbox{AudioStreamCsound} and \mbox{AudioStreamPlaybackCsound}, no assumptions need to be made about relationships between nodes in the scene tree because this is managed by the \mbox{\textit{AudioStreamPlayer}}, \newline\mbox{\textit{AudioStreamPlayer2D}}, or \mbox{\textit{AudioStreamPlayer3D}} referencing the audio stream.
+By inheriting from the class \mbox{AudioStreamPlaybackResampling} over \mbox{AudioStreamPlayback}, \mbox{AudioStreamPlaybackCsound} hands off the task of cubic interpolation to Godot.
+This means that the Csound piece can run at a different sampling rate than Godot's audio server and changing the pitch of the piece through the AudioStreamPlayer's \textit{pitch} property works without duplicated code.
+
+Mono and two-channel Stereo output are supported and can be set in the instruments section of the Csound piece.
+I decided to expose some parameters that are only accessible through the Csound-API but not in Csound code as editor properties.
+This way, the debug level and general verbosity of Csound's console output can be set by ticking boxes.
+
+By calling the AudioStreamPlayer's method \textit{set()}, the user can control Csound channels.
+The method would normally be used to set properties of the \mbox{AudioStreamPlayer} itself, but if the property name is prefixed as a parameter, one can write to Csound channels.
+For example, set("parameters/pulse\_width") writes to the \textit{pulse\_width} channel in the Csound piece.
+Unfortunately, calling the \textit{get()} method does not call \mbox{AudioStreamPlaybackCsound's} method \textit{\_get\_parameter}, which I suspect is a bug with Godot, so only the default value and values written through set() can be returned.
+
+Some code was written with future support for channel types other than \newline CSOUND\_CONTROL\_CHANNEL in mind but for now control channels remain the only supported channel type.
+The demo project accompanying this submission showcases how a simple Csound piece with a score can be played, modulated, and stopped in Godot by clicking buttons.
+Considering that generative pieces can be written in Csound, these control parameters could also be used to control an algorithmic composition in realtime through the \textit{schedulek} opcode.
+
+
+\end{document}
