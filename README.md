@@ -1,10 +1,9 @@
-# MU620A Project (AudioStreamCsound)
+# AudioStreamCsound
 
-This repo contains a godot project showcasing.
-The submodule [gdextension/audio-stream-csound](https://codeberg.org/vinni-richburgh/audio-stream-csound.git) is part of this project.
+This repo contains a Godot project demonstrating the use of a plugin implementing audio stream classes to play back Csound pieces in the Godot Engine.
+The submodule [gdextension/audio-stream-csound](https://codeberg.org/vinni-richburgh/audio-stream-csound.git) is part of this project. (Make sure to clone this repo recursively!)
 This project was built on Fedora Linux and should work on MacOS out of the box.
 However, it does not support Windows!
-
 Please find the project description for MU620A in the tex/ directory!
 
 
